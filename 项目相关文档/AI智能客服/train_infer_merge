@@ -1,0 +1,152 @@
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift infer \
+--model_type qwen2-57b-a14b-instruct \
+--ckpt_dir /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct \
+--model_id_or_path /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct
+
+
+
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3 \
+swift sft \
+    --model_type qwen2-57b-a14b-instruct \
+    --model_id_or_path /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct \
+    --dataset dataset/1_Shuffled_Processed_Dabby.jsonl \
+    --num_train_epochs 10 \
+    --eval_steps 1 \
+    --logging_steps 1 \
+    --output_dir output \
+    --lora_target_modules ALL \
+    --self_cognition_sample 10 \
+    --model_name 星链智能 'XLAI' \
+    --model_author 姚随 ys
+
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5 python llm_sft.py   --model_type qwen2-57b-a14b-instruct    --model_id_or_path /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct   --custom_train_dataset_path /root/autodl-tmp/yaosui/dataset/1_Shuffled_Processed_Dabby.jsonl self-cognition#1000 alpaca-zh#1000 alpaca-en#1000  --batch_size 4   --sft_type lora   --tuner_backend peft   --dtype AUTO   --output_dir output   --max_length 2048   --use_loss_scale true   --gradient_accumulation_steps 16   --learning_rate 1e-4   --use_flash_attn true   --eval_steps 1   --save_steps 50   --train_dataset_sample 5000   --num_train_epochs 10   --check_dataset_strategy warning    --gradient_checkpointing false   --weight_decay 0.1   --max_grad_norm 0.5   --warmup_ratio 0.03   --save_total_limit 2   --logging_steps 1   --use_flash_attn false    --lora_target_modules ALL   --lora_rank 8   --lora_alpha 32  --model_name 星链智能 'Star Chain Intelligence'   --model_author 星链物联网智能科技有限公司 'Xinglian IoT Intelligent Technology Co Ltd'
+
+
+
+tensorboard --logdir=/root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/runs
+
+
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift infer \
+--model_id_or_path \
+/root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct \
+--ckpt_dir \
+/root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285
+
+
+
+
+### merged model
+# 使用awq量化:
+# autoawq和cuda版本有对应关系，请按照`https://github.com/casper-hansen/AutoAWQ`选择版本
+pip install autoawq -U
+pip install autoawq -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+# 使用gptq量化:
+# auto_gptq和cuda版本有对应关系，请按照`https://github.com/PanQiWei/AutoGPTQ#quick-installation`选择版本
+pip install auto_gptq -U
+pip install auto-gptq --no-build-isolation -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+
+# gptq
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift export \
+    --model_type qwen2-57b-a14b-instruct \
+    --quant_bits 4 \
+    --dataset dataset/1_Shuffled_Processed_Dabby.jsonl \
+    --merge_lora true \
+    --quant_method gptq \
+    --model_id_or_path /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct \
+    --ckpt_dir /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285
+
+
+# 成功推理
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift infer \
+    --model_type qwen2-57b-a14b-instruct \
+    --model_id_or_path /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285-merged \
+    --tensor_parallel_size 4 \
+    --infer_backend vllm
+
+# 失败推理
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift infer \
+    --model_type qwen2-57b-a14b-instruct \
+    --model_id_or_path /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285-gptq-int4 \
+    --tensor_parallel_size 4 \
+    --infer_backend vllm
+
+
+
+
+python -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen2-57b-a14b-instruct \
+    --model /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285-merged \
+    --max-model-len 2048 \
+    --gpu-memory-utilization 0.9 \
+    --tensor_parallel_size 4 \
+    --trust-remote-code
+
+
+
+RAY_memory_monitor_refresh_ms=0 CUDA_VISIBLE_DEVICES=0,1,2,3
+python -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen2-57b-a14b-instruct \
+    --model  /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285-merged \
+    --max-model-len 16384 \
+    --gpu-memory-utilization 0.9 \
+    --tensor-parallel-size 4 \
+    --max_seq_len_to_capture 16384
+
+
+AutoDL SSH隧道工具
+1.CMD映射8000到本地，postman测试
+http://localhost:8000/v1/chat/completions
+
+2_1.映射到公网：（20240805最近出错无法使用）
+ssh -R 80:127.0.0.1:8000 serveo.net
+
+
+
+2_2或者ngrok.exe映射到公网：https://dashboard.ngrok.com/get-started/setup/windows
+1.ngrok config add-authtoken 2k8n6kqCR8tXxWdnpmsPbLOdcWv_4HrDZVeq4GxzpQD1t1645
+2.ngrok http http://localhost:8000
+3.复制  https://58c2-14-155-50-159.ngrok-free.app 修改docker-compose.yml
+
+
+修改相应的密钥：
+sk-RpOgJtrCNT35blpWF0D2A282E1De46809cAd69589e116dCc
+
+
+
+重启服务
+docker-compose down
+docker-compose up -d
+
+
+
+修改fastgpt默认界面：
+docker exec -it fastgpt /bin/sh
+
+
+
+创建自定义网络：
+docker network create my_custom_network
+
+查看特定网络：
+docker network inspect  <name>
+
+查看全部的Docker 网络：
+docker network ls
+
+添加网络到特定网段：
+docker network connect fastgpt_fastgpt llm_14B
+
+
+
+
+
+

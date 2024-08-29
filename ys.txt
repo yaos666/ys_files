@@ -1,0 +1,494 @@
+1. 明确ubuntu发行版本、cuda版本和cudnn版本
+uname -a // 查看ubuntu发行版本信息
+ls -l /usr/local/ | grep cuda // 查看cuda版本
+cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2 // 查看cudnn版本
+cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2 // 查看cudnn版本
+
+
+
+2、查看：
+	文件数：
+	          	ls -l | grep -c '^-'
+	文件大小 + 时间：
+		ls-lh
+	文件最新被访问、创建、修改时间：
+		stat anchors.txt    or    stat *
+	linux 查看内存：# 查看各分区使用情况：
+		df -h     
+       	linux 查看文件是否存在：
+		find 000000000.jpg      
+	linux 创建文件：
+		touch <filename>
+	linux 文件太多移动：
+		find sourcePath/ -name "*.txt"  -exec mv {} targetPath/  \;
+		#or
+		find sourcePath/ -type f  -exec mv {} targetPath/  \;
+		如：find test/ -name "*.jpg" -exec mv {} train \;
+
+3、查看文件大小：
+	du -sh *
+
+4、从github.com下载project:
+	git clone https://github.com/pjreddie/darknet.git
+
+
+可能无法下载：
+(方式一、）
+先：
+git config --global --unset http.proxy 
+git config --global --unset https.proxy
+再：
+git clone https://github.com/ultralytics/yolov5.git
+
+20240829:
+
+//取消https代理 
+git config --global --unset https.proxy
+//取消http代理
+git config --global --unset http.proxy
+
+
+
+
+(方式二、）
+git clone git://github.com/bubbliiiing/faster-rcnn-pytorch.git
+
+
+git clone https://github.com/amdegroot/ssd.pytorch.git
+
+
+
+
+5、豆瓣源pip安装：
+	pip install -r requirements.txt
+
+	pip install pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+	可用：
+	pip install pip install torch==1.7.1 torchvision==0.8.2 torchaudio==0.7.2 -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+	pip install --upgrade --force-reinstall torch==1.8.0 torchvision==0.9.0 torchaudio==0.8.0
+
+
+
+
+
+6、打包.exe程序：
+清华源安装打包库：
+	pip install pyinstaller -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+***windows:
+	pyinstaller -F tanchishe.py
+
+***ubuntu:
+	pyinstaller --onefile flask_server_demo.py
+ 	
+后台运行python程序：
+ 	nohup python flask_server_demo.py > nohup.out 2>&1 &
+
+后台运行可执行文件：
+	./flask_server_demo &
+ 	nohup ./flask_server_demo > nohup.out 2>&1 &
+
+查看运行的python程序 or 可执行文件：
+	ps -ef|grep python
+	ps aux | grep  flask_server_demo
+
+
+
+
+
+7、连接不上，重新打开也不行
+	重启：reboot
+	更新驱动：sh cuda_10.2.89_440.33.01_linux.run
+
+
+
+
+8、docker外面文件 和 里面文件 相互复制 （只能在(mmskeleton) 外面使用）：
+	 docker cp yolo:/workspace/darknet/VOCdevkit/VOC2007/JPEGImages  /home/ubuntu/ys/yolo_f
+	docker cp tianchi_24_16g:/tianchi_data/prediction_result/submission.csv /tmp/ys/prediction_result/submission.csv
+
+
+
+
+9、linux 缺少库的安装：
+	apt-get install mlocate
+	sudo apt-get install liblcuda-dev
+
+
+
+10、解决185服务器突然断开之后，训练直接终止的方法：
+（1）python -u t.py >>t.out 2>&1 & 
+	-u：表示日志实时的记录；
+	>>t.out：日志存入的文件；
+	2>&1 &：2错误，1准确的日志。
+（2）、tail -f t.out 或者 cat t.out
+	查看实时的日志，实时写入显示。
+（3）、ps -ef|grep python
+	查看所有的python进程。
+（3_1）、ps -ef|grep python |grep train.py
+              ps -ef|grep python |grep chengguan_server_test.py
+	查看进程是否还在运行。
+（3_2）、kill -9 36289
+	杀掉指定的进程36289。
+（4）、./t.sh
+	运行sh文件。
+（5）、top
+	查看所有进程。
+（6）查看当前内存使用情况：
+	df -h ./
+
+
+
+11、启动72的conda环境：
+export PATH=~/anaconda3/bin:$PATH
+source ~/.bashrc
+conda --version
+conda env list
+（1）、source activate
+（2）、conda deactivate
+（3）、conda activate pytorch
+
+创建+删除虚拟环境：
+	conda create -n ys_pytorch python=3.8
+	conda create --name ys_pytorch python=3.8
+
+	conda remove -n classification --all
+	conda remove --name classification --all
+
+
+ssh连接该服务器使用conda activate python36命令激活环境后未使用conda deactivate退出环境就关闭终端导致的。
+
+重命名conda虚拟环境：
+	例如，我们想把环境 yourEnvironmentName 重命名成 yourEnv
+	1、 克隆:yourEnvironmentName是原环境的名称，yourEnv是新名字
+	conda create -n yourEnv --clone yourEnvironmentName
+	conda create -n FaskChat --clone FastChat
+	conda create -n ChatGLM2 --clone base
+	2、 删除原环境，yourEnvironmentName是原环境的名称，其余命令字符保持不变
+	conda remove -n yourEnvironmentName --all
+
+
+
+12、创建python虚拟环境+进入
+（1）创建、python3 -m venv yolov5-env
+（2）进入、source yolov5-env/bin/activate
+
+
+12-1、创建虚拟环境后配置 pip 国内源
+（1）、TIPS ：激活conda新建的虚拟环境且进入后，在复制下面的命令！！
+（2）、pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+（3）、出现一行什么 writing to xxxx.pip.ini 就行了
+
+
+***conda添加清华源：
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/menpo/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+
+
+13、查看服务器相关：
+	nvidia-smi -L 直接可以看到显卡型号
+
+
+
+***创建软连接：
+	ln -s NewPath OrgPath
+	如：ln -s NewPath OrgPath
+	ln -s /disk-data/yolov5 yolov5
+	ln -s /disk-data/darknet/VOCdevkit VOCdevkit
+
+
+***目录挂载：
+	mount OrgPath  NewPath
+	如：mount /dev/sda1  /disk-data/
+		mount /home/ys /sys/fs/cgroup/ys
+
+
+***修改服务器各种参数文件之后，进行强制更新：
+	终端执行：sync
+
+
+
+*** 授予权限：
+	sudo chmod -R 777 /home/ys
+	sudo chmod -R 777 /sys/fs/cgroup/ys
+	其中
+		-R 是指级联应用到目录里的所有子目录和文件
+		777 是所有用户都拥有最高权限
+		/soft 是需要放行的文件夹
+
+给予yaosui用户名yolov5的权限：
+	chown -R yaosui:yaosui yolov5/
+
+
+
+
+
+
+
+14cuda出错解决、yolov5 :CUDA error: no kernel image is available for execution on the device（可能是版本不适配，重新安装酒啊后）
+	python3 -m pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 -f https://download.pytorch.org/whl/torch_stable.html
+
+
+
+
+	
+15、基于docker镜像，创建新的容器：
+	创建容器必须要使用nvidia-run
+	nvidia-run -p 80:80 --name lwh -i -t registry.baidubce.com/paddlepaddle/paddle:2.1.3-gpu-cuda11.2-cudnn8  /bin/bash
+	docker run -it -p 80:80 --name lwh -i -t registry.baidubce.com/paddlepaddle/paddle:2.1.3-gpu-cuda11.2-cudnn8  /bin/bash
+	如果容器直接和主机共用网络使用：--net=host  同时挂载主机目录
+	如果容器直接和主机共用网络使用：--net=host  同时挂载主机目录
+	nvidia-run --net=host --name sq -v /mnt:/mnt -it registry.baidubce.com/paddlepaddle/paddle:2.1.3-gpu-cuda11.2-cudnn8  /bin/bash 
+
+
+例如：219服务器创建ys容器：(创建时设置自定义的共享内存：https://www.dianjilingqu.com/440698.html)
+	nvidia-run --net=host --name ys -v /ys:/ys -it registry.baidubce.com/paddlepaddle/paddle:2.1.3-gpu-cuda11.2-cudnn8  /bin/bash
+
+
+
+
+16、dokcer相关
+修改docker中的共享内存太小，修改为1G：https://blog.csdn.net/LPJCSY/article/details/123710632
+（1）修改前将容器停掉：
+	 docker stop ys
+查看所有容器：
+	docker ps -a
+查看目前运行的容器，确认修改的容器shif是否已经都停掉：
+	docker ps
+	（2）、然后进入到该目录找到容器对应的id目录下，修改hostconfig.json文件
+		* vim hostconfig.json；
+			vim /var/lib/docker/container/{id}/hostconfig.json
+			(vim打开之后可以直接：/+str，查找定位到相应的str。如：/ShmSize)
+		* 修改 "ShmSize" 为1G ：
+			"ShmSize":1073741824；
+		* 保存之后，重启容器：
+			systemctl restart docker.socket
+
+如：219服务器
+ ys：
+cd /var/lib/
+
+/containers/501a9099483fb4b622e44cc554f28996c90f542643f62392a961558c5370cbe0
+2147483648
+8G:4294967296
+
+4294967296
+67108864
+67108864
+
+
+
+16、docker镜像打包相关：
+***docker 实例打包为镜像：
+	docker commit llm vllm:1.0.0
+
+
+***docker本地打包、加载：
+docker save -o vllm_test.tar vllm_test:1.1.0 
+
+docker load -i <来源文件.tar>
+docker load -i myimage_latest.tar
+
+
+
+
+***上传镜像到aliyun：18184142815
+登录阿里云Docker Registry：
+	docker login --username=dingtalk_hdgyju registry.cn-hangzhou.aliyuncs.com
+	Ys@123456
+
+将镜像推送到Registry：
+$ docker login --username=dingtalk_hdgyju registry.cn-hangzhou.aliyuncs.com
+$ docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/xlzn/vllm:[镜像版本号]
+$ docker push registry.cn-hangzhou.aliyuncs.com/xlzn/vllm:[镜像版本号]
+
+从Registry中拉取镜像:
+docker pull registry.cn-hangzhou.aliyuncs.com/xlzn/vllm:[镜像版本号]
+
+
+
+
+***华为云上传镜像：
+18184142815
+docker login -u cn-east-3@MIHSA3SIIW2OMHD9NHFF -p b5179616b124352b8fe1371e37b4639662b94b129b201e4e000cf8f47fbe244f swr.cn-east-3.myhuaweicloud.com
+docker tag hello-world:latest swr.cn-east-3.myhuaweicloud.com/ys/hello-world:test
+docker push swr.cn-east-3.myhuaweicloud.com/ys/hello-world:test
+docker pull swr.cn-east-3.myhuaweicloud.com/ys/hello-world:test
+
+
+
+
+17、指定GPU运行：
+CUDA_VISIBLE_DEVICES=0 python Multiple_pred_class.py
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+
+CUDA_VISIBLE_DEVICES=0 python train.py
+
+
+
+
+18、分类网络下载失败，可尝试手动下载，放置于指定的位置即可：
+例子：wget -P /home/20220222Proj/pretrained_models -c https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth
+
+Downloading: "http://data.lip6.fr/cadene/pretrainedmodels/se_resnet50-ce0d4300.pth" to /root/.cache/torch/hub/checkpoints/se_resnet50-ce0d4300.pth
+
+1）、wget -P /root/.cache/torch/hub/checkpoints -c http://data.lip6.fr/cadene/pretrainedmodels/se_resnet50-ce0d4300.pth -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+打开时发现检测出来为网站为不安全网站，添加：--no-check-certificate 忽略
+2）、wget --no-check-certificate -P /root/.cache/torch/hub/checkpoints -c http://data.lip6.fr/cadene/pretrainedmodels/se_resnet50-ce0d4300.pth -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+
+19、ssh 可以连 xftp连不上 nat 映射
+https://www.codeprj.com/blog/2a5e2e1.html
+https://www.cnblogs.com/houxiyang/archive/2012/11/19/2776622.html
+
+218服务器：
+vi /etc/ssh/sshd_config
+find /usr/ -name sftp-server
+Subsystem       sftp    /usr/lib/openssh/sftp-serve
+/etc/init.d/sshd reload
+
+注：219情况不一样，待处理，218配置文件无60024端口，219配置文件有8822端口
+
+
+20、72 
+
+ 无法启动--->报错：
+root@ubuntu:/home/ubuntu# 
+docker start -i yolo 
+Error response from daemon: failed to create shim: OCI runtime create failed: container_linux.go:380: starting container process caused: process_linux.go:545: container init caused: Running hook #1:: error running hook: exit status 1, stdout: , stderr: nvidia-container-cli: initialization error: nvml error: driver not loaded: unknown
+
+解决方法：驱动升级
+解决步骤：
+1）、官网下载对应版本的驱动：https://www.nvidia.cn生
+2）、界面右上角：驱动程序--->产品类型：GeForce，产品系列：GeForce RTX 20 Series，产品家族：GeForce RTX 2080Ti，操作系统：Linux 64-bit，下载类型：生产分支生，语言：Chinese(Simpleified)--->搜索--->下载......
+3）、参照博客：https://blog.csdn.net/MT_NUO/article/details/121998957
+	（1）、vi /etc/modprobe.d/blacklist.conf
+	（2）、在最后一行加入下面几行语句，ctrl +s 保存退出：
+		blacklist vga16fb
+		blacklist nouveau
+		blacklist rivafb
+		blacklist rivatv
+		blacklist nvidiafb
+	（3）、更新文件：
+		 update-initramfs -u
+	（4）、重启服务器：
+		sync--->reboot
+	（5）、cd 到.run文件目录中，运行.run 文件，安装驱动（此处exit到ubuntu@ubuntu:~$）
+		cd /home/ubuntu
+		加权限：chmod 777 NVIDIA-Linux-x86_64-515.65.01.run
+		sudo ./NVIDIA-Linux-x86_64-515.65.01.run -no-x-check -no-nouveau-check -no-opengl-files
+			（1）按方向键控制左右，按回车确认。选择 Continue installation
+			（2）WARNING:…忽视，按回车选择OK
+			（3）按回车选择 YES.
+	（6）、验证安装：在终端输入以下指令，出现显卡信息则证明安装成功。
+		nvidia-smi
+
+
+
+21、可以使用以下命令查看本机的操作系统和位数信息：
+uname -m && cat /etc/*release
+
+
+
+22、git传输大文件
+1.下载git lfs
+	再bash命令行中执行git lfs install
+2.大文件追踪
+	例如，要追踪当前目录下的大文件flask_server_demo:
+	使用git lfs track "flask_server_demo"
+	这时会在该目录下生成一个.gitattributes文件，里面记录了追踪的文件信息
+3.add .gitattributes文件
+	git add .gitattributes
+	git commit -m "用Git LFS跟踪flask_server_demo文件"
+	git push
+
+4.add大文件
+	添加a.rar大文件：
+	git add .
+	git commit -m "添加all文件"
+	git push
+
+
+23.anaconda3+cuda+cudnn安装：
+# 验证cuda是否可用：
+	python3
+	import torch
+	torch.__version__
+	torch.cuda.is_available()
+	torch.cuda.device_count()
+
+
+vi ~/.bashrc
+source ~/.bashrc
+
+# anaconda3:--->https://repo.anaconda.com/archive/
+	export PATH="/root/anaconda3/bin:$PATH"
+
+
+# cuda:--->https://developer.nvidia.com/cuda-toolkit-archive
+	/usr/local/cuda-12.1/bin
+
+	export PATH=$PATH:/usr/local/cuda-12.1/bin  
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-12.1/lib64  
+	export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda-12.1/lib64
+
+
+# cudnn:--->https://developer.nvidia.com/nccl/nccl-legacy-downloads
+	cp lib/* /usr/local/cuda-12.1/lib64/
+	cp include/* /usr/local/cuda-12.1/include/
+
+	cat /usr/local/cuda-12.1/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
+
+
+
+24、docker安装：--->https://docs.docker.com/engine/install/ubuntu/
+https://blog.csdn.net/weixin_42571882/article/details/134015815
+
+
+25、华为云创建docker镜像容器报错：
+root@9b9a67e3067a:/# nvidia-smi
+NVIDIA-SMI couldn't find libnvidia-ml.so library in your system. Please make sure that the NVIDIA Display Driver is properly installed and present in your system.
+Please also try adding directory that contains libnvidia-ml.so to your system PATH.
+
+解决方案：
+cd到指定路径：
+	cd /usr/lib/x86_64-linux-gnu
+查看当前路径下的nvidia:
+	ls -l libnvidia*
+	找到libnvidia-ml.so.1文件，此处未和驱动libnvidia-nvvm.so.535.54.03进行软连接
+创建软连接：
+	ln -s libnvidia-ml.so.535.54.03 libnvidia-ml.so.1
+	显示已经存在：ln: failed to create symbolic link 'libnvidia-ml.so.1': File exists
+删除文件：
+	rm libnvidia-ml.so.1
+重新创建软连接：
+	ln -s libnvidia-ml.so.535.54.03 libnvidia-ml.so.1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

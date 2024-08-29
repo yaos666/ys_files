@@ -1,0 +1,32 @@
+学术资源加速：
+source /etc/network_turbo
+
+
+
+
+参考：https://modelscope.cn/docs/%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85
+pip install modelscope
+pip install modelscope[framework]
+
+
+pip install datasets
+
+pip install oss2
+
+pip install addict
+
+pip install oss2
+
+
+
+streamlit run ChatGLM2_web2_streamlit.py --server.port 6006
+
+
+streamlit run test.py --server.port 7007
+
+
+
+streamlit run ys_modify_codes.py --server.port 7007
+
+
+streamlit run  web_demo2.py --server.port 7007

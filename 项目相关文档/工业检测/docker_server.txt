@@ -1,0 +1,347 @@
+在使用Docker之前，需要先在Windows上安装Docker。安装完成后，可以通过WIN+R打开命令窗口，输入命令docker version来验证Docker是否安装成功。如果成功安装，将显示Docker的版本信息。
+进入：
+WIN+R
+bash
+
+
+
+https://blog.csdn.net/weixin_37926734/article/details/123033286
+安装cuda:
+https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=runfile_local
+cuda_11.8.0_520.61.05_linux.run
+sudo sh cuda_11.8.0_520.61.05_linux.run
+
+export PATH=$PATH:/usr/local/cuda-11.8/bin 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda-11.8/lib64
+export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda-11.8/lib64
+
+vim ~/.bashrc
+source ~/.bashrc
+
+
+查看是否安装成功：
+nvcc -V
+
+
+
+安装cudnn:
+https://developer.nvidia.com/rdp/cudnn-archive
+sudo cp lib/* /usr/local/cuda-11.8/lib64/
+sudo cp include/* /usr/local/cuda-11.8/include/
+查看是否安装成功：
+cat /usr/local/cuda-11.8/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
+
+
+安装anconda:
+bash Anaconda3-2023.09-0-Linux-x86_64.sh
+添加环境变量：
+vi ~/.bashrc
+export PATH="~/anaconda3/bin":$PATH
+source ~/anaconda3/bin/activate
+source ~/.bashrc
+
+
+
+安装vi/vim：
+apt update
+apt install vim
+
+
+一、拉取yolov8最新镜像
+1、Dockerfile
+FROM ultralytics/ultralytics:latest
+2、docker build -t ultralytics/ultralytics:latest .
+3、docker build -t python:3.8 .
+
+
+docker-compose安装：
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+
+二、创建容器
+
+docker run -itd --name DeviceRecognitionService1 --gpus all python:3.8 -p 8989:8989 -v /mnt/d/YsWrok/Project/DeviceRecognitionService:/home ultralytics/ultralytics:latest /bin/bash
+
+
+
+docker run -itd --name python3.8 --gpus all -p 8282:8282 -v /mnt/d/YsWrok/Project/DeviceRecognitionService:/home python:3.8 /bin/bash
+
+
+docker run -itd --name test --gpus all -p 8080:8080 -v /home/yaosui/DeviceRecognitionService:/home python:3.8 /bin/bash
+
+git clone git@github.com:IceClear/CLIP-IQA.git
+cd CLIP-IQA
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install -e .
+
+pip install mmcv-full -f https://download.openmmlab.com/mmcv/dist/cu118/torch2.0.0/index.html
+
+
+
+pip install ultralytics
+
+
+pytorch-cuda安装：X
+pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pytorch-cuda安装：
+pip3 install torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+
+
+pip3 install torch==2.1.2+cu118 torchvision==0.16.2+cu118 --index-url https://download.pytorch.org/whl/cu118
+
+torch                          2.1.2+cu118
+torchvision                    0.16.2+cu118
+
+
+pip3 install torchvision==0.15.1+cu118 torchaudio==2.0.1+cu118 --index-url https://download.pytorch.org/whl/cu118
+
+
+
+torch                   2.0.0+cu118
+torchaudio              2.0.1+cu118
+torchvision             0.15.1+cu118
+
+
+sudo rmmod nvidia_uvm
+sudo modprobe nvidia_uvm
+查看gpu是否可用：
+import torch
+torch.cuda.is_available()
+
+
+
+
+
+
+备用机配置docker启动服务：
+1、创建docker容器：
+docker run -it --gpus all --name test -v /usr/local/cuda:/usr/local/cuda  -p 8181:8181 -v /home/yaosui/DeviceRecognitionService:/home ultralytics/ultralytics:latest /bin/bash
+
+2、安装相关python包：
+pip install Flask==2.0.3 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install Werkzeug==2.0.3 -i https://pypi.tuna.tsinghua.edu.cn/simple
+pip install WTForms==3.1.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+出错解决：
+sudo apt install nvidia-cudnn
+
+
+3、打包docker容器打包成docker镜像:
+docker commit test devicerecognition:1.0.0
+
+
+docker commit DeviceRecognitionService devicerecognition:1.0.0
+
+
+
+4、linux本地创建docker启动服务
+docker run -it --gpus all --name DeviceRecognitionService  -p 8080:8080 -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+
+docker run -it --gpus all --name DeviceRecognitionService  -p 8080:8080 -v D:\YsWrok\Project\git\V1.0.0\DeviceRecognitionService:/home registry.cn-hangzhou.aliyuncs.com/yuntiao/devicerecognition:1.0.0 /bin/bash
+
+
+
+
+
+
+
+
+
+docker run -it --gpus all --name DeviceRecognitionService  -p 8181:8181  -v /mnt/d/YsWrok/Project/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+
+docker run -it --gpus all --name test -v /usr/local/cuda:/usr/local/cuda  -p 8181:8181 -v /home/yaosui/DeviceRecognitionService:/home ultralytics/ultralytics:latest /bin/bash
+
+docker run -it --gpus all --name DeviceRecognitionService  -p 8181:8181  -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+
+docker run -it --gpus all --name test1  -p 8282:8282  -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0  
+pip install plotly -i https://pypi.tuna.tsinghua.edu.cn/simple
+
+
+5、将linux系统中的docker镜像打包到windows系统中使用
+5.1、本地保存docker镜像
+docker save -o devicerecognition.tar devicerecognition:1.0.0
+
+
+5.2、本地加载docker镜像
+docker load -i devicerecognition.tar
+
+5.3
+参考：https://blog.csdn.net/watson2017/article/details/136625029
+
+5.3.1、创建docker容器
+docker run -it --name test  -p 8181:8181  -v /mnt/d/YsWrok/Project/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+docker run -it --name test  -p 8181:8181 -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+5.3.2、在该容器中删除 /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1 和文件 /usr/lib/x86_64-linux-gnu/libcuda.so.1
+rm /usr/lib/x86_64-linux-gnu/libnvidia-*
+rm /usr/lib/x86_64-linux-gnu/libcuda.so*
+
+rm /usr/lib/x86_64-linux-gnu/libcudadebugger-*
+rm /usr/lib/x86_64-linux-gnu/libcudadebugger.so*
+
+
+5.3.3、新开一个终端，把此时的容器打包为镜像
+docker commit devicerecognitionservice-1.0.0 devicerecognition:2.0.0
+
+docker commit test1 yolov8recognition:2.0.0
+
+提交镜像到aliyun:
+$ docker login --username=dingtalk_hdgyju registry.cn-hangzhou.aliyuncs.com
+$ docker tag a2e9fc37b848 registry.cn-hangzhou.aliyuncs.com/yolov8recognition/yolov8recognition:1.0.0
+$ docker push registry.cn-hangzhou.aliyuncs.com/yolov8recognition/yolov8recognition:1.0.0
+
+5.3.4、使用nvidia-docker启动上一步打包的镜像，变为新的带有GPU的容器
+docker run -it --gpus all --name DeviceRecognitionService  -p 8080:8080 -v /usr/local/cuda:/usr/local/cuda  -v /mnt/d/YsWrok/Project/DeviceRecognitionService:/home yolov8recognition:1.0.0 /bin/bash
+
+
+
+
+
+ 
+docker run -it --gpus all --name test -v /usr/local/cuda:/usr/local/cuda  -p 8181:8181 -v /home/yaosui/DeviceRecognitionService:/home ultralytics/ultralytics:latest /bin/bash
+
+docker run -it --gpus all --name DeviceRecognitionService -p 8383:8383 -v /home/yaosui/DeviceRecognitionService:/home registry.cn-hangzhou.aliyuncs.com/yolov8recognition/yolov8recognition:1.0.0 /bin/bash
+
+
+docker run -it --gpus all --name DeviceRecognitionService -p 8383:8383 -v /home/yaosui/DeviceRecognitionService:/home devicerecognitionservice:1.0.0 /bin/bash
+
+
+docker run -it --gpus all --name test -p 8080:8080 -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+
+
+docker run -it --gpus all --name DeviceRecognitionService -p 8080:8080 -v /home/yaosui/DeviceRecognitionService:/home registry.cn-hangzhou.aliyuncs.com/yuntiao/devicerecognition:1.0.0 /bin/bash
+
+
+
+docker run -it --gpus all --name test123 -p 8080:8080 registry.cn-hangzhou.aliyuncs.com/yuntiao/full_test:1.0.0 /bin/bash
+
+
+docker run -it --gpus all --name test123 -p 8080:8080 registry.cn-hangzhou.aliyuncs.com/yuntiao/devicerecognition:1.0.0 /bin/bash
+
+
+docker run -t --name test123 -p 8080:8080 registry.cn-hangzhou.aliyuncs.com/yuntiao/full_test:1.0.0 /bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+curl https://get.docker.com | sh
+sudo systemctl start docker && sudo systemctl enable docker
+
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
+
+
+mmcv-full>=1.3.13
+
+
+AttributeError: module 'mmcv' has no attribute '__version__'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+nohup python flask_server_demo.py > nohup.out 2>&1 &
+
+
+
+
+docker run -it --name test --network host  -p 8282:8282  -v /home/yaosui/DeviceRecognitionService:/home devicerecognition:1.0.0 /bin/bash
+
+
+
+
+
+阿里云拉去失败：
+ping registry.cn-hangzhou.aliyuncs.com
+docker login registry.cn-hangzhou.aliyuncs.com
+
+
+
+
+
+
+
+
+
+
+（官方）$ curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" > docker-compose
+（国内）$ curl -L https://get.daocloud.io/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+..
+
+
+
+
+
+docker镜像加速拉取：
+1.sudo vi /etc/docker/daemon.json
+2.添加内容：
+{
+  "registry-mirrors": [
+        "https://hub.uuuadc.top",
+        "https://docker.anyhub.us.kg",
+        "https://dockerhub.jobcher.com",
+        "https://dockerhub.icu",
+        "https://docker.ckyl.me",
+        "https://docker.awsl9527.cn"
+    ],
+   "dns": ["8.8.8.8", "8.8.4.4"],
+  "default-runtime": "nvidia",
+  "runtimes": {
+    "nvidia": {
+      "path": "nvidia-container-runtime",
+      "runtimeArgs": []
+    }
+  }
+}
+
+3.重启docker：
+sudo systemctl restart docker
+
+
+
+
+报错解决：
+docker 启动失败 System has not been booted with systemd as init system (PID
+https://blog.51cto.com/u_16175437/7209751
+步骤 1: 下载并安装必要的软件包
+$ sudo apt-get update               // 更新软件包列表
+$ sudo apt-get install -y systemd   // 安装 systemd 软件包
+步骤 2: 配置 Docker daemon
+我们需要对 Docker daemon 进行配置，以使用 systemd 作为 init 系统。编辑 Docker daemon 配置文件 /etc/docker/daemon.json，并添加以下内容：
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+步骤 3: 重新启动 Docker 服务
+$ sudo systemctl daemon-reload   // 重新加载 systemd 配置
+$ sudo systemctl restart docker  // 重新启动 Docker 服务

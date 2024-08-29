@@ -1,0 +1,73 @@
+1、20240530
+重庆A区 / 086机
+5d5147b55f-2b488163
+图像模糊测试
+
+ssh -p 26574 root@connect.cqa1.seetacloud.com
+h8nB2lwbvKwH
+
+
+
+内蒙A区 / 107机
+34fb1182ae-be2786b3
+swift
+ssh -p 47524 root@region-3.seetacloud.com
+BO96EWUjufdW
+
+
+星链公司账号：   
+1、
+L20专区 / 019机
+82b4428160-84884743
+YS-25-1
+ssh -p 42777 root@connect.bjc1.seetacloud.com
+J0bB+dhQtDnC
+
+
+
+
+2、20240725创建
+L20专区 / 051机
+7f2443ba69-b7e103e8
+YS-25_1
+ssh -p 25490 root@connect.bjc1.seetacloud.com
+gN+hrq03gBIR
+
+
+
+3、20240731创建
+L20专区 / 007机
+f3694fa01b-f34971e8
+YS-25-2
+ssh -p 35086 root@connect.bjc1.seetacloud.com
+J0bB+dhQtDnC
+	
+
+
+4、20240805创建
+L20专区 / 020机
+debe47a6b3-2c373b01
+YS-25-3
+ssh -p 49433 root@connect.bjc1.seetacloud.com
+x5V0YTr6OhJl
+
+
+
+5、L20专区 / 048机
+1ef2488736-159cced9
+YS-25-4
+ssh -p 23584 root@connect.bjc1.seetacloud.com
+x5V0YTr6OhJl
+
+6、L20专区 / 037机
+35834db7e0-b21c3241
+YS-25-5
+ssh -p 14276 root@connect.bjc1.seetacloud.com
+aC73f1YvlI5a
+
+
+
+
+
+
+

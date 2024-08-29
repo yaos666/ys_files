@@ -1,0 +1,315 @@
+"""
+Train a YOLOv5 model on a custom dataset.
+
+
+代码位置：219服务器--->docker ys--->conda pytorch --->/ys/yolov5
+代码位置：219服务器--->docker ys--->conda pytorch --->/ys/yolov5-6.1
+代码位置：219服务器--->docker sq --->/mnt/yolov5
+代码位置：185服务器--->conda pytorch --->/home/lwh/yolov5
+
+Models and datasets download automatically from the latest YOLOv5 release.
+Models: https://github.com/ultralytics/yolov5/tree/master/models
+Datasets: https://github.com/ultralytics/yolov5/tree/master/data
+Tutorial: https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data
+
+Usage:
+    $ python path/to/train.py --data coco128.yaml --weights yolov5s.pt --img 640  # from pretrained (RECOMMENDED)
+    $ python path/to/train.py --data coco128.yaml --weights '' --cfg yolov5s_RoadDamage.yaml --img 640  # from scratch
+"""
+参考博客：https://blog.csdn.net/weixin_41010198/article/details/106785253
+https://blog.csdn.net/qq_45945548/article/details/121701492    
+
+
+1、运行 gen_files.py 将所有数据集拆分为训练集和测试集合：/home/lwh/yolov5/dataset/Road_Damage/train、
+
+					        /home/lwh/yolov5/dataset/Road_Damage/val。
+修改参数：
+	（1）、classes = ['D00', 'D10', 'D20', 'D40']
+    	（2）、input_dir = "/home/lwh/yolov5/dataset/VOC2007"
+    	（3）、out_dir = "/home/lwh/yolov5/dataset/Road_Damage"
+
+
+2、修改模型配置文件：./models/yolov5s_RoadDamage.yaml 配置文件：
+
+修改的参数：
+	（1）、nc: 4  # number of classes
+
+
+
+
+3、修改数据配置文件：./data/Road_Damage.yaml
+
+修改的参数：
+	train: /home/lwh/yolov5/dataset/Road_Damage/train/images
+	val: /home/lwh/yolov5/dataset/Road_Damage/val/images
+	# Classes
+	nc: 4  # number of classes
+	names: ['D00', 'D10', 'D20', 'D40']  # class names
+
+
+
+4、开始训练 train.py ：
+		
+方式一、
+	修改的参数：
+	（1）、'--epochs', type=int, default=100
+	（2）、'--batch-size', type=int, default=16
+	（3）、'--imgsz', '--img', '--img-size', type=int, default=608
+训练命令：
+	python train.py --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_RoadDamage.yaml --weights ./weights/yolov5s.pt --device 0
+
+
+方式二、
+	不需要修改 train.py 中的参数！！！
+训练命令：
+	python train.py --img 608 --batch 16 --epochs 100 --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_RoadDamage.yaml --weights ./weights/yolov5s.pt --device 0
+
+
+注意：防止服务器断开，训练终止：
+	python -u t.py >>t.out 2>&1 & 
+	
+
+	（1）、训练命令：
+		python -u train.py --img 608 --batch 16 --epochs 100 --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_RoadDamage.yaml --weights ./weights/yolov5s.pt --device 0 >>./train_process/img_896.out 2>&1 &
+	（2）、进入显示训练界面：
+		tail -f ./train_process/img_896.out
+	（3）、查看运行的py文件是否真的在运行ing:
+		ps -ef|grep python |grep train.py
+	（4）、想要中断训练过程，则需要杀掉相应的进程即可：
+		kill -9 36289
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1、训练：
+python train.py --img 896 --batch 16 --epochs 120 --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_Road_Damage.yaml --weights ./weights/yolov5s.pt --device 0,1,2,3
+
+
+
+python -u python train.py --img 896 --batch 16 --epochs 120 --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_Road_Damage.yaml --weights ./weights/yolov5s.pt --device 0,1,2,3 >>Road_Damage.out 2>&1 &
+tail -f Road_Damage.out
+
+
+nohup python3 train.py --img 896 --batch 16 --epochs 120 --data ./data/Road_Damage.yaml --cfg ./models/yolov5s_Road_Damage.yaml --weights ./weights/yolov5s.pt --device 0,1,2,3 > Road_Damage.out 2>&1 &
+tail -f Road_Damage.out
+
+nohup python3 train.py --img 896 --batch 16 --epochs 120 --data ./data/mask.yaml --cfg ./models/yolov5s_mask.yaml --weights ./weights/yolov5s.pt --device 0,1,2,3 > mask.out 2>&1 &
+tail -f mask.out
+
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+**********训练结束后***********：
+
+	(1)、会生成两个预训练的模型：
+		/home/lwh/yolov5/runs/train/exp12/weights/best.pt：保存的是中间一共比较好模型
+		/home/lwh/yolov5/runs/train/exp12/weights/last.pt：训练结束后保存的最后模型
+	（2）、在Tensorbaord上查看数据的训练过程中的一些指标:
+		/home/lwh/yolov5/runs/train/exp12
+	（3）、tensorboard 查看训练过程：./runs/events.out.tfevents.1648556114.ubuntu.34518.0
+		（3-1）、tensorboard --logdir=runs
+		（3-2）、出现一个网址地址，将网址复制下来到谷歌浏览器打开就可以看到训练的过程
+	（4）、模型转换 .pt----->.onnx
+		python  export.py --weights weights/yolov5s.pt --include  onnx
+
+python  export.py --weights weights/yolov5s_ming.pt --img 896 --include  onnx
+		
+		XXXXXX python ../export.py --weights yolov5s_ming.pt -imgsz 896 896 --rect --batch 1 --include=onnx
+
+	**************************************
+	（*4*）将yolov5s.pt模型转换为不依托yolov5对应pytorch环境的yolov5s.onnx模型，并进行相应的win下pycharm推理+.xml自动化标注
+	           参考：ttps://blog.csdn.net/weixin_45994963/article/details/128338286
+	           1）、将/ys/yolov5/export.py中的内容修改成/ys/yolov5/new_export_onnx/change/export_onnx_detect.py
+	           2）、将/ys/yolov5/models/yolo.py中的内容修改成/ys/yolov5/new_export_onnx/change/yolo_onnx_detect.py
+	           3）、/ys/yolov5路径下执行：
+				python export.py --weights yolov5s.pt --img 640 --batch 1 --include=onnx --simplify 
+	           4）、/ys/yolov5路径下会生成：
+				class_name.txt、yolov5s.onnx
+	           5）、运行文件说明：G:\YS_code\ys_project\ONNXProject\yolov5_onnx 在pycharm中打开
+			@1、onnx模型单张图片检测：single_detect_onnx.py
+			@2、onnx模型单张图片筛选检测（只是检测出筛选出来的类别）：single_SelDetect_onnx.py
+			@3、onnx模型多张图片检测：multiple_detect_onnx.py
+			@4、onnx模型多张图片筛选检测（只是检测出筛选出来的类别）：multiple_SelDetect_onnx.py
+			@5、onnx模型多张图片筛选自动化标注（只是标注出筛选出来的类别，并生成.xml文件）：multiple_SelLabeling_onnx.py
+			（在自动化标注过程中有时会，有时又不会出现警告：libpng warning: iCCP: known incorrect sRGB profile）
+				*可以不用管，继续将未标注的图片筛选出来跑就好啦
+				*目前切换python版本都不能解决，opencv版本未测试
+	**************************************
+
+
+
+
+
+5、使用训练好的预训练模型进行测试：
+
+5-1、图片推理测试：
+	（1）、单张图片测试命令：
+	python detect.py --source  ./test/Japan_002409.jpg --weights ./runs/train/exp12/weights/best.pt --project ./out --device 0
+	（2）、图片目录测试：
+	python detect.py --source ./test --weights ./runs/train/exp12/weights/best.pt --project ./out --device 0
+
+	如果检测中有些图片置信度比较低的可以通过--conf-thres参数过滤掉，例如：（默认--conf-thres的值为0.4）
+	python detect.py --source ./test --weights ./runs/train/exp12/weights/best.pt --project ./out --conf-thres 0.8
+
+
+
+python detect.py --source  ./data/images/bus.jpg --weights ./weights/yolov5s.pt --project ./out --device 0
+
+python ys.py --source  ./data/images/bus.jpg --weights ./weights/yolov5s.pt --project ./out --device 0
+
+
+
+5-2、视频推理测试：
+	（1）、python detect.py --source ./test/test.mp4 --weights ./runs/train/exp12/weights/best.pt --project ./out
+	（2）、如果想指定输出视频的fourcc格式，用如下命令：
+		python detect.py --source ./test/test.mp4 --weights ./runs/train/exp12/weights/best.pt --project ./out --fourcc H264
+
+
+python detect.py --source ./test/a.mp4 --weights ./weights/PUBLIC_FRIDGE_DYNAMIC_DET_20220919.pt --project ./out
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2、测试：
+单张图片，单个模型：
+python  detect.py --source ./data/images/bus.jpg --weights=./weights/yolov5s.pt
+
+多张图片，单个模型：
+python detect.py --source ./test_DATA/test --weights ./runs/train/exp/weights/best.pt --project ./test_DATA/out --device 0,1,2,3
+zip -roq exp.zip exp
+
+多张图片，多个模型：(修改 detect_Composite_models.py 中的参数)
+python detect_Composite_models.py --source ./test_DATA/test --weights ./runs/train/exp/weights/best.pt --project ./test_DATA/out --device 0,1,2,3
+zip -roq exp.zip exp
+
+___________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+3、detect.py
+链接：https://juejin.cn/post/7084929223659356197
+
+weights:训练的权重
+source:测试数据，可以是图片/视频路径，也可以是'0'(电脑自带摄像头),也可以是rtsp等视频流
+output:网络预测之后的图片/视频的保存路径
+img-size:网络输入图片大小
+conf-thres:置信度阈值
+iou-thres:做nms的iou阈值
+device:设置设备
+view-img:是否展示预测之后的图片/视频，默认False
+save-txt:是否将预测的框坐标以txt文件形式保存，默认False
+classes:设置只保留某一部分类别，形如0或者0 2 3
+agnostic-nms:进行nms是否也去除不同类别之间的框，默认False
+augment:推理的时候进行多尺度，翻转等操作(TTA)推理
+update:如果为True，则对所有模型进行strip_optimizer操作，去除pt文件中的优化器等信息，默认为False
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

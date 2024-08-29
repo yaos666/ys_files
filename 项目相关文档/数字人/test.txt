@@ -1,0 +1,11 @@
+1、无法git clone的问题：
+git config --global --unset http.proxy
+git config --global --unset https.proxy
+2、继续clone：
+git clone https://github.com/xszyou/Fay.git
+
+3、conda create -n fay python=3.10
+4、pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+5、pip install -r requirements.txt
+
+

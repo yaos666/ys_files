@@ -1,0 +1,152 @@
+version: '3.3'
+services:
+  # PostgreSQL
+  pg:
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/pg:1.0.0
+    container_name: pg
+    restart: always
+    ports: 
+      - 5432:5432
+    networks:
+      - fastgpt
+    environment:
+      - POSTGRES_USER=username
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./pg/data:/var/lib/postgresql/data
+
+  # MongoDB
+  mongo:
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/mongo:1.0.0
+    container_name: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    networks:
+      - fastgpt
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=myusername
+      - MONGO_INITDB_ROOT_PASSWORD=mypassword
+    volumes:
+      - ./mongo/data:/data/db
+    entrypoint:
+      - bash
+      - -c
+      - |
+        openssl rand -base64 128 > /data/mongodb.key
+        chmod 400 /data/mongodb.key
+        chown 999:999 /data/mongodb.key
+        echo 'const isInited = rs.status().ok === 1
+        if(!isInited){
+          rs.initiate({
+              _id: "rs0",
+              members: [
+                  { _id: 0, host: "mongo:27017" }
+              ]
+          })
+        }' > /data/initReplicaSet.js
+        docker-entrypoint.sh mongod --keyFile /data/mongodb.key --replSet rs0 &
+
+        until mongo -u myusername -p mypassword --authenticationDatabase admin --eval "print('waited for connection')" > /dev/null 2>&1; do
+          echo "Waiting for MongoDB to start..."
+          sleep 2
+        done
+
+        mongo -u myusername -p mypassword --authenticationDatabase admin /data/initReplicaSet.js
+        wait $$!
+
+  # SandBox
+  sandbox:
+    container_name: sandbox
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/fastgpt-sandbox:1.0.0
+    networks:
+      - fastgpt
+    restart: always
+
+  # FastGPT
+  fastgpt:
+    container_name: fastgpt
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/fastgpt:1.0.0
+    ports:
+      - 3000:3000
+    networks:
+      - fastgpt
+    depends_on:
+      - mongo
+      - pg
+      - sandbox
+    restart: always
+    environment:
+      - DEFAULT_ROOT_PSW=1234
+      - OPENAI_BASE_URL=http://xinglianllm-test:8000/v1
+      - CHAT_API_KEY=sk-sW1l0kbdzGlBv6287c891d592d5e49369fD01f163e2fB74c
+      - DB_MAX_LINK=30
+      - TOKEN_KEY=any
+      - ROOT_KEY=root_key
+      - FILE_TOKEN_KEY=filetoken
+      - MONGODB_URI=mongodb://myusername:mypassword@mongo:27017/fastgpt?authSource=admin
+      - PG_URL=postgresql://username:password@pg:5432/postgres
+      - SANDBOX_URL=http://sandbox:3000
+      - LOG_LEVEL=info
+      - STORE_LOG_LEVEL=warn
+    volumes:
+      - ./config.json:/app/data/config.json
+
+  # MySQL
+  mysql:
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/mysql:1.0.0
+    container_name: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - fastgpt
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: oneapimmysql
+      MYSQL_DATABASE: oneapi
+    volumes:
+      - ./mysql:/var/lib/mysql
+
+  # OneAPI
+  oneapi:
+    container_name: oneapi
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/oneapi:1.0.0
+    ports:
+      - 3001:3000
+    depends_on:
+      - mysql
+    networks:
+      - fastgpt
+    restart: always
+    environment:
+      - SQL_DSN=root:oneapimmysql@tcp(mysql:3306)/oneapi
+      - SESSION_SECRET=oneapikey
+      - MEMORY_CACHE_ENABLED=true
+      - BATCH_UPDATE_ENABLED=true
+      - BATCH_UPDATE_INTERVAL=10
+      - INITIAL_ROOT_TOKEN=fastgpt
+    volumes:
+      - ./oneapi:/data
+
+  # XinglianLLM-Test
+  xinglianllm-test:
+    container_name: xinglianllm-test
+    image: registry.cn-hangzhou.aliyuncs.com/xinshang_14/xinglianllm-test:1.0.0
+    ports:
+      - 8000:8000
+    networks:
+      - fastgpt
+    restart: always
+    command: > 
+      bash -c "python3 -m vllm.entrypoints.openai.api_server \
+      --served-model-name qwen1half-7b-chat \
+      --model /checkpoint-200-gptq-int4 \
+      --max-model-len 2048 \
+      --gpu-memory-utilization 1 \
+      --tensor-parallel-size 1"
+
+networks:
+  fastgpt:
+

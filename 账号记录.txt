@@ -1,0 +1,63 @@
+1、华为云账号：
+https://auth.huaweicloud.com/authui
+企业租户ID固定为：hid_nz885e16kljiedy
+账号：yaosui
+密码：ys123456
+
+代码位置：https://hn.devcloud.huaweicloud.com/ipdproject/home
+
+
+华为云账号上传：
+obsutil ls obs://lianruan/ai
+obsutil cp obs://lianruan/ai/nvidia_cuda.tar ./
+
+2、邮箱：
+yaosui@quanqiutiao.com
+
+git config --global user.email "yaosui@quanqiutiao.com"
+git config --global user.name "yaosui"
+
+
+
+3、windows docker
+ys
+ys123
+
+
+4、借用AI电脑
+xluser
+!QAZ2wsx
+
+
+4、堡垒机
+192.168.0.133
+0010000025
+Ys@123456
+
+
+5、aliyun
+18184142815
+dingtalk_hdgyju
+Ys@123456
+
+
+算力云：
+ssh -p 12567 root@connect.westb.seetacloud.com
+AGxL8z4/Z5og
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

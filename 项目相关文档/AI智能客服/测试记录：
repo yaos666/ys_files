@@ -1,0 +1,315 @@
+测试记录：
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1.5-0.5b \
+    --model /root/autodl-tmp/yaosui/Qwen1.5-0.5B \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1.5-4b \
+    --model /root/autodl-tmp/yaosui/Qwen1.5-4B \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --dtype half
+
+
+__________________________________________________________
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-7b-chat \
+    --model /root/autodl-tmp/yaosui/Qwen1.5-7B-Chat-GPTQ-Int4 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+ python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-7b-chat \
+    --model /home/models/checkpoint-120-merged \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code
+
+
+   
+   obsutil ls obs://lianruan/ai
+   obsutil cp obs://lianruan/ai/checkpoint-200-gptq-int4.zip ./
+
+
+
+
+    python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-7b-chat \
+    --model /home/models/Qwen-7B-Chat_XL \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code
+
+
+ python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-0.5b \
+    --model /home/models/Qwen1.5-0.5B \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+ python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-7b-chat \
+    --model /home/models/Qwen-7B-Chat_XL \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+ python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-7b-chat \
+    --model /home/models/Qwen1.5-7B-Chat-GPTQ-Int4 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+ python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-7b-chat \
+    --model /root/autodl-tmp/yaosui/Qwen1.5-7B-Chat-GPTQ-Int4 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+----------------------------------------------------------------------------------------
+算力云下载的---->本地
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-7b-chat \
+    --model /home/models/Qwen1.5-7B-Chat-GPTQ-Int4 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+算力云下载的-->华为云
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-7b-chat \
+    --model /home/models/Qwen-7B-Chat-Int4 \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+
+
+    
+
+
+
+算力云下载的-->华为云--->本地
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-0.5b-chat \
+    --model /root/autodl-tmp/yaosui/models/Qwen1.5-0.5B-Chat \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --port 8080 \
+    --trust-remote-code \
+    --dtype half
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-14b-chat \
+    --model /home/models/checkpoint-120-merged \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --dtype half
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-14b-chat \
+    --model /home/models/checkpoint-120-merged \
+    --max-model-len 1024 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --dtype half \
+    --quantization gptq
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen2-57b-a14b-instruct \
+    --model /root/autodl-tmp/yaosui/output/qwen2-57b-a14b-instruct/v0-20240802-114000/checkpoint-285-merged \
+    --max-model-len 16384 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 4 \
+    --trust-remote-code \
+    --port 8000 \
+    --trust-remote-code \
+    --dtype half 
+
+
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen1half-0.5b-chat \
+    --model /home/models/qwen1.5-0.5b-chat-gptq-int4 \
+    --max-model-len 4096 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 1 \
+    --trust-remote-code \
+    --port 8000 \
+    --trust-remote-code \
+    --dtype half \
+    --quantization gptq
+
+
+
+sk-CLRu4xhAdcpGDJqME8Ee6197B0F940528019F86eCbAc63C6
+
+https://9ac0-14-155-57-9.ngrok-free.app
+
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3,4,5 python llm_sft.py   --model_type qwen2-57b-a14b-instruct    --model_id_or_path /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct   --custom_train_dataset_path /root/autodl-tmp/yaosui/dataset/1_Shuffled_Processed_Dabby.jsonl self-cognition#1000 alpaca-zh#1000 alpaca-en#1000  --batch_size 4   --sft_type lora   --tuner_backend peft   --dtype AUTO   --output_dir output   --max_length 2048   --use_loss_scale true   --gradient_accumulation_steps 16   --learning_rate 1e-4   --use_flash_attn true   --eval_steps 1   --save_steps 50   --train_dataset_sample 5000   --num_train_epochs 10   --check_dataset_strategy warning    --gradient_checkpointing false   --weight_decay 0.1   --max_grad_norm 0.5   --warmup_ratio 0.03   --save_total_limit 2   --logging_steps 1   --use_flash_attn false    --lora_target_modules ALL   --lora_rank 8   --lora_alpha 32  --model_name 星链智能 'Star Chain Intelligence'   --model_author 星链物联网智能科技有限公司 'Xinglian IoT Intelligent Technology Co Ltd'
+
+
+
+ys***
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift export \
+    --model_type qwen-14b-chat \
+    --quant_bits 4 \
+    --dataset dataset/1_Shuffled_Processed_Dabby.jsonl \
+    --merge_lora true \
+    --quant_method gptq \
+    --model_id_or_path qwen/Qwen-14B-Chat \
+    --ckpt_dir /root/autodl-tmp/output/qwen-14b-chat/v0-20240822-150254/checkpoint-364
+
+
+
+
+
+
+
+
+  
+
+
+
+    
+sk-sy7pwqrti70ngVbmAe1c7c5d34Dc4189Bf01Bf26BfDcE1B8
+sk-sy7pwqrti70ngVbmAe1c7c5d34Dc4189Bf01Bf26BfDcE1B8
+
+https://4c18-14-153-76-110.ngrok-free.app
+
+
+
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen2-57b-a14b-instruct \
+    --model /root/autodl-tmp/yaosui/qwen2/Qwen2-57B-A14B-Instruct \
+    --max-model-len 16384 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 4 \
+    --port 8000 \
+    --trust-remote-code \
+    --dtype half
+
+
+tensorboard --logdir=/root/autodl-tmp/yaosui/output/qwen-14b-chat/v6-20240821-174724/runs
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-14b-chat \
+    --model /root/autodl-tmp/yaosui/output/qwen-14b-chat/v6-20240821-174724/checkpoint-60-merged \
+    --max-model-len 8192 \
+    --model_max_length 8192 \ 
+    --max_num_batched_tokens 8192 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 4 \
+    --port 8000 \
+    --trust-remote-code \
+    --dtype half
+
+
+ys***
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-14b-chat \
+    --model /root/autodl-tmp/output/qwen-14b-chat/v0-20240822-150254/checkpoint-364-merged \
+    --max-model-len 8192 \
+    --max_num_batched_tokens=8192 \
+    --max_num_seqs=256 \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 4 \
+    --port 8000 \
+    --trust-remote-code
+
+
+
+python3 -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-14b-chat \
+    --model /root/autodl-tmp/output/qwen-14b-chat/v0-20240822-150254/checkpoint-364-merged \
+    --gpu-memory-utilization 0.95 \
+    --tensor_parallel_size 4 \
+    --port 8000 \
+    --trust-remote-code
+
+
+
+RAY_memory_monitor_refresh_ms=0 CUDA_VISIBLE_DEVICES=0,1,2,3
+python -m vllm.entrypoints.openai.api_server \
+    --served-model-name qwen-14b-chat \
+    --model  /root/autodl-tmp/output/qwen-14b-chat/v0-20240822-150254/checkpoint-364-merged \
+    --max-model-len 2048 \
+    --gpu-memory-utilization 0.9 \
+    --tensor-parallel-size 4 \
+    --max_seq_len_to_capture 2048 \
+    --trust_remote_code
+
+
+
+
+CUDA_VISIBLE_DEVICES=0,1,2,3 swift infer \
+    --model_type qwen-14b-chat \
+    --model_id_or_path /root/autodl-tmp/output/qwen-14b-chat/v0-20240822-150254/checkpoint-364-merged \
+    --tensor_parallel_size 4 \
+    --infer_backend vllm
+
+
+
+
+    

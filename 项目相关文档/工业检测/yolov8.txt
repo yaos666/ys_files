@@ -1,0 +1,43 @@
+模型转换推理：https://www.ebaina.com/articles/140000017308
+
+1、原始模型进行推理：
+
+D:\YsWrok\Project\yolov8\train.py
+
+yolo detect predict model=./runs\detect\train\weights\best.pt source=data/test_imgs save=True
+
+
+pip3 install torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1+cu118 -f https://download.pytorch.org/whl -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com
+
+
+
+pip3 install torch==2.0.0+cu118 torchaudio==2.0.1+cu118 torchvision==0.15.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+
+pip3 install torch==2.0.0+cu118 torchaudio==2.0.1+cu118 torchvision==0.15.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+
+
+
+
+pip uninstall nvidia-cublas-cu12 nvidia-cuda-cupti-cu12 nvidia-cuda-nvrtc-cu12 nvidia-cuda-runtime-cu12 nvidia-cudnn-cu12 nvidia-cufft-cu12 nvidia-curand-cu12 nvidia-cusolver-cu12 nvidia-cusparse-cu12 nvidia-nccl-cu12 nvidia-nvjitlink-cu12 nvidia-nvtx-cu12
+
+
+
+2、onnx模型进行推理：
+导出onnx模型：
+yolo export model=weights/yolov8n.pt format=onnx opset=12
+onnx模型进行推理：
+python D:\YsWrok\Project\yolov8\onnx_export.py
+
+
+
+3、ONNX转换为engine
+方式一、
+yolo export model=./weights/yolov8n.pt format=engine device=0
+
+yolo export model=./weights/yolov8n.pt  format=engine
+
+方式二、
+trtexec --onnx=./weights/yolov8n.onnx --saveEngine=./weights/yolov8n.engine --fp16
+
+
+
